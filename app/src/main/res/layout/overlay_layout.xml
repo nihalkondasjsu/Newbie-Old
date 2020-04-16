@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#02724D"
+            android:background="@drawable/title_bg"
             android:padding="10dp">
 
             <TextView
@@ -29,7 +29,8 @@
                 android:maxLines="1"
                 android:text="Step 2 : Zelle"
                 android:textColor="#fff"
-                android:textSize="14pt" />
+                android:textStyle="bold"
+                android:textSize="16pt" />
 
             <TextView
                 android:id="@+id/overlayClose"
@@ -51,13 +52,14 @@
                 android:id="@+id/overlayDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeMaxTextSize="20sp"
                 android:autoSizeMinTextSize="12sp"
                 android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
-                android:maxLines="2"
+                android:textColor="#000"
+                android:maxLines="3"
                 android:padding="5dp"
-                android:text='Click on "Transfer|Zelle"\nMenu Option'
+                android:text='Click on "Transfer'
                 android:textSize="10pt" />
 
             <LinearLayout
@@ -75,8 +77,11 @@
                         android:id="@+id/overlayGoBack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#00000000"
-                        android:src="@android:drawable/ic_menu_revert" />
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/back" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -89,8 +94,10 @@
                         android:id="@+id/overlayFullView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#00000000"
-                        android:src="@android:drawable/ic_menu_view" />
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/launch" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -103,8 +110,11 @@
                         android:id="@+id/overlayNextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#00000000"
-                        android:src="@android:drawable/ic_media_play" />
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/forward" />
                 </LinearLayout>
             </LinearLayout>
 

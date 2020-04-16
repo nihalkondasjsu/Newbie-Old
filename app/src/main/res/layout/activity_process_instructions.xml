@@ -5,35 +5,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#fff"
     tools:context=".app.ProcessInstructionsActivity">
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="20pt"
-        android:text="Title : "/>
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12pt"
-        android:text="Description : "/>
+        android:layout_height="?actionBarSize"
+        android:text="Newbie"
+        android:textSize="16pt"
+        android:textColor="#fff"
+        android:background="@drawable/title_bg"
+        android:paddingLeft="10dp"
+        android:gravity="center_vertical"/>
+
     <LinearLayout
-        android:id="@+id/actions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#fff"
+
         android:orientation="vertical">
 
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:padding="15dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:gravity="left">
+
+                    <ImageButton
+                        android:id="@+id/goBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="5dp"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/back" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:gravity="center">
+
+                    <ImageButton
+                        android:id="@+id/showOverlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/pip" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:gravity="right">
+
+                    <ImageButton
+                        android:id="@+id/nextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginRight="5dp"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/forward" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeStepGranularity="2sp"
+                android:autoSizeTextType="uniform"
+                android:textColor="#000"
+                android:maxLines="10"
+                android:padding="5dp"
+                android:text='Click on "Transfer'
+                android:textSize="10pt" />
+
+        </RelativeLayout>
+
+
+
     </LinearLayout>
-    <Button
-        android:id="@+id/goBack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Go Back"/>
-    <Button
-        android:id="@+id/showOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Show Overlay"/>
 </LinearLayout>

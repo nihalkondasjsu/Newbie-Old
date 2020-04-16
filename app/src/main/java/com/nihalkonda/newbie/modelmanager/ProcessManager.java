@@ -39,7 +39,7 @@ public class ProcessManager {
     }
 
     private void addToHistory(Step currentStep) {
-        if(history.empty()==false){
+        if(history.empty() == false){
             if(history.peek().getId().equals(currentStep.getId())){
                 //same step on the top of stack
                 return;
@@ -50,6 +50,11 @@ public class ProcessManager {
 
     private void setCurrentStep(Step currentStep) {
         this.currentStep = currentStep;
+    }
+
+    public boolean hasBack(){
+        System.out.println(history);
+        return history.size() > 1;
     }
 
     public void goBack(){

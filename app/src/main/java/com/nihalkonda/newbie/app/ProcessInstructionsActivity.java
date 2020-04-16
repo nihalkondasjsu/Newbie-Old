@@ -9,6 +9,7 @@ import butterknife.OnClick;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.Gravity;
@@ -17,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -44,16 +46,19 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
     @BindView(R.id.description)
     TextView description;
 
+    @BindView(R.id.nextButton)
+    ImageButton nextButton;
+
+    @BindView(R.id.goBack)
+    ImageButton backButton;
+
     TextView overlayTitle;
 
     TextView overlayDescription;
 
-    @BindView(R.id.actions)
-    LinearLayout actionsLayout;
+    View.OnClickListener overlayActionClicked;
 
-    View.OnClickListener actionClicked,overlayActionClicked;
-
-    HashMap<String,Action> actionMap;
+    ArrayList<Action> actions;
 
     HashMap<Integer,Action> menuItemActionMap;
 
@@ -62,91 +67,107 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
     View mTestView;
 
     PopupMenu.OnMenuItemClickListener popupMenuClicked;
+    private ImageButton overlayNextButton,overlayBackButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_process_instructions);
         ButterKnife.bind(this);
+        getSupportActionBar().hide();
         ButterKnife.setDebug(true);
-        init();
-        createProcess();
-        openOverlay(this);
-        showCurrentStep();
+        try {
+            init();
+            createProcess();
+            openOverlay(this);
+            showCurrentStep();
+        }catch (Exception e){
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideOverlay();
     }
 
     private void init() {
         processManager = new ProcessManager();
-        actionMap = new HashMap<>();
+        actions = new ArrayList<>();
         menuItemActionMap = new HashMap<>();
-        actionClicked = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println(view.getTag().toString()+" is clicked");
-                processManager.dispatchAction(actionMap.get(view.getTag().toString()));
-                showCurrentStep();
-            }
-        };
         popupMenuClicked = new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                processManager.dispatchAction(menuItemActionMap.get(menuItem.getItemId()));
-                showCurrentStep();
+                dispatchAction(menuItemActionMap.get(menuItem.getItemId()));
                 return false;
             }
         };
         overlayActionClicked = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(actions.size()==1){
+                    dispatchAction(actions.get(0));
+                    return;
+                }
                 menuItemActionMap.clear();
                 PopupMenu menu = new PopupMenu(ProcessInstructionsActivity.this,view);
                 int temp = 0;
-                for(Map.Entry<String,Action> entry : actionMap.entrySet()){
+                for(Action action : actions){
                     menuItemActionMap.put(
                             menu.getMenu().add(
                                     0,temp++,0,
-                                    entry.getValue().getName()
+                                    action.getName()
                             ).getItemId(),
-                            entry.getValue()
+                            action
                     );
                 }
                 menu.setOnMenuItemClickListener(popupMenuClicked);
                 menu.show();
             }
         };
+        nextButton.setOnClickListener(overlayActionClicked);
+        title.setTypeface(Typeface.createFromAsset(getAssets(),
+                "kellyslab.ttf"));
+        description.setTypeface(Typeface.createFromAsset(getAssets(),
+                "ralewaym.ttf"));
+    }
+
+    private void dispatchAction(Action action){
+        processManager.dispatchAction(action);
+        showCurrentStep();
     }
 
     private void showCurrentStep() {
 
         Step currentStep = processManager.getCurrentStep();
 
-        ArrayList<Action> actions = processManager.getCurrentActions();
+        actions = processManager.getCurrentActions();
 
         title.setText(currentStep.getTitle());
         overlayTitle.setText(currentStep.getTitle());
         description.setText(currentStep.getDescription());
         overlayDescription.setText(currentStep.getDescription());
 
-        actionsLayout.removeAllViews();
-        actionMap.clear();
-        for (Action action:actions){
-            createActionButton(action);
-        }
-
+        overlayNextButton.setVisibility(actions.size()>0? View.VISIBLE : View.INVISIBLE);
+        nextButton.setVisibility(actions.size()>0? View.VISIBLE : View.INVISIBLE);
+        overlayBackButton.setVisibility(processManager.hasBack()? View.VISIBLE : View.INVISIBLE);
+        backButton.setVisibility(processManager.hasBack()? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void createActionButton(Action action) {
-        Button button = new Button(this);
-        button.setText(action.getName());
-        button.setOnClickListener(actionClicked);
-        button.setTextSize(20);
-        button.setTag(action.getId());
-        actionMap.put(button.getTag().toString(),action);
-        System.out.println(actionMap);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(10,10,10,10);
-        actionsLayout.addView(button, layoutParams);
-    }
+//    private void createActionButton(Action action) {
+//        Button button = new Button(this);
+//        button.setText(action.getName());
+//        button.setOnClickListener(actionClicked);
+//        button.setTextSize(20);
+//        button.setTag(action.getId());
+//        actionMap.put(button.getTag().toString(),action);
+//        System.out.println(actionMap);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        layoutParams.setMargins(10,10,10,10);
+//        actionsLayout.addView(button, layoutParams);
+//    }
 
     private void createProcess() {
 
@@ -239,15 +260,20 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
 
         overlayTitle = mTestView.findViewById(R.id.overlayTitle);
         overlayDescription = mTestView.findViewById(R.id.overlayDescription);
+        overlayNextButton = mTestView.findViewById(R.id.overlayNextButton);
+        overlayBackButton = mTestView.findViewById(R.id.overlayGoBack);
 
-        mTestView.findViewById(R.id.overlayNextButton).setOnClickListener(overlayActionClicked);
+        overlayTitle.setTypeface(Typeface.createFromAsset(getAssets(),
+                "kellyslab.ttf"));
+        overlayDescription.setTypeface(Typeface.createFromAsset(getAssets(),
+                "ralewaym.ttf"));
 
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
         final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
                 //WindowManager.LayoutParams.FIRST_SUB_WINDOW
                 700,
-                450,
+                475,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
@@ -259,19 +285,28 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
 
         windowManager.addView(mTestView, layoutParams);
 
-        mTestView.post(new Runnable() {
-            @Override
-            public void run() {
-                mTestView.setMinimumWidth(mTestView.getMeasuredWidth());
-                mTestView.setMinimumHeight(mTestView.getMeasuredHeight());
-            }
-        });
+
 
         overlayDescription.post(new Runnable() {
             @Override
             public void run() {
-                overlayDescription.setMinHeight(overlayDescription.getMeasuredHeight());
-                hideOverlay();
+                final String temp = overlayDescription.getText().toString();
+                overlayDescription.setText("A\nB\nC");
+                overlayDescription.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        overlayDescription.setMinHeight(overlayDescription.getMeasuredHeight());
+                        overlayDescription.setText(temp);
+                        mTestView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mTestView.setMinimumWidth(mTestView.getMeasuredWidth());
+                                mTestView.setMinimumHeight(mTestView.getMeasuredHeight());
+                                hideOverlay();
+                            }
+                        });
+                    }
+                });
             }
         });
 
@@ -279,11 +314,10 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 hideOverlay();
-                //windowManager.removeView(mTestView);
             }
         });
 
-        mTestView.findViewById(R.id.overlayGoBack).setOnClickListener(new View.OnClickListener() {
+        overlayBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goBack();
@@ -297,6 +331,8 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
             }
         });
 
+        overlayNextButton.setOnClickListener(overlayActionClicked);
+
         mTestView.setOnTouchListener(new View.OnTouchListener() {
             int downX,downY;
             int downLX,downLY;
@@ -307,23 +343,14 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
                 final int Y = (int) motionEvent.getRawY();
 
                 if(motionEvent.getAction()==MotionEvent.ACTION_DOWN){
-
                     downX=X;
                     downY=Y;
-
                     downLX=layoutParams.x;
                     downLY=layoutParams.y;
-
                 }else if(motionEvent.getAction()==MotionEvent.ACTION_MOVE){
-                    //view.setLayoutParams(layoutParams1);
-
                     layoutParams.x= X - (downX-downLX);
                     layoutParams.y= Y - (downY-downLY);
-
                     windowManager.updateViewLayout(mTestView,layoutParams);
-
-                }else{
-
                 }
 
                 return true;
