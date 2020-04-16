@@ -10,6 +10,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProcessInstructionsActivity extends AppCompatActivity {
+
+    public static final String EXTRA_PROCESS_ENCODED="EXTRA_PROCESS_ENCODED";
 
     ProcessManager processManager;
 
@@ -147,6 +150,30 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
 
     private void createProcess() {
 
+        Gson gson = new Gson();
+
+        Process process = createDummyProcess();
+
+        String encodedProcess = getIntent().getStringExtra(EXTRA_PROCESS_ENCODED);
+
+        if(encodedProcess!=null){
+            String decodedProcess = new String(Base64.decode(encodedProcess,Base64.DEFAULT));
+            process = gson.fromJson(decodedProcess, Process.class);
+        }
+
+        System.out.println(gson.toJson(process));
+
+        processManager.setProcess(process);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        windowManager.removeView(mTestView);
+        super.onDestroy();
+    }
+
+    private Process createDummyProcess() {
         Step stepOpenW = new Step("OpenWA","Whatsapp","Click the green icon with phone");
         Step stepOpenChat = new Step("OpenChat","Chat Tab","Click the chat tab in the top");
         Step stepOpenIndvChat = new Step("OpenIndvChat","Individual Chat","Click on the contact in the list");
@@ -175,39 +202,7 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
         process.putStepActionAssociation(stepOpenSettings,actionOpenProfile);
         process.putStepActionAssociation(stepOpenProfile,actionCaptureProfilePicture);
         process.putStep(stepCapturePreview);
-        /*Step stepA = new Step("A","Step A","Actions are 'B'");
-        Step stepB = new Step("B","Step B","Actions are 'C'");
-        Step stepC = new Step("C","Step C","Actions are 'E'");
-        Step stepD = new Step("D","Step D","Actions are 'B'");
-        Step stepE = new Step("E","Step E","Actions are 'D,F'");
-        Step stepF = new Step("F","Step F","Actions are ''");
-
-        //Action actionA = new Action("A","Open A","A");
-        Action actionB = new Action("B","Open B","B");
-        Action actionC = new Action("C","Open C","C");
-        Action actionD = new Action("D","Open D","D");
-        Action actionE = new Action("E","Open E","E");
-        Action actionF = new Action("F","Open F","F");
-
-        Process process = new Process();
-
-        System.out.println("1 "+process.putStepActionAssociation(stepA,actionB));
-        System.out.println("2 "+process.putStepActionAssociation(stepB,actionC));
-        System.out.println("3 "+process.putStepActionAssociation(stepC,actionE));
-        System.out.println("4 "+process.putStepActionAssociation(stepD,actionB));
-        System.out.println("5 "+process.putStepActionAssociation(stepE,actionD));
-        System.out.println("6 "+process.putStepActionAssociation(stepE,actionF));
-        System.out.println("7 "+process.putStep(stepF));
-
-        process.setHeadStepId("A");
-        */
-
-        Gson gson = new Gson();
-
-        System.out.println(gson.toJson(process));
-
-        processManager.setProcess(process);
-
+        return process;
     }
 
     @OnClick(R.id.goBack)
@@ -283,7 +278,8 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
         mTestView.findViewById(R.id.overlayClose).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                windowManager.removeView(mTestView);
+                hideOverlay();
+                //windowManager.removeView(mTestView);
             }
         });
 

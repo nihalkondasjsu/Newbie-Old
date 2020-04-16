@@ -31,4 +31,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Go Back"/>
+    <Button
+        android:id="@+id/showOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Overlay"/>
 </LinearLayout>
