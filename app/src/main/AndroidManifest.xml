@@ -10,9 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".app.ProcedureGroupActivity"></activity>
-        <activity android:name=".PermissionCheckActivity" />
-        <activity android:name=".app.ProcessInstructionsActivity" />
+        <activity android:name=".app.ProcedureGroupActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PermissionCheckActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".app.ProcessInstructionsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
