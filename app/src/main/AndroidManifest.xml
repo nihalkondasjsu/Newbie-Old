@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nihalkonda.newbie">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.nihalkonda.newbie"
+    tools:ignore="LockedOrientationActivity" >
 
     <application
         android:allowBackup="true"
@@ -12,7 +14,8 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".app.ProcedureGroupActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            />
         <activity android:name=".PermissionCheckActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
