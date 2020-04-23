@@ -10,6 +10,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.Gravity;
@@ -147,6 +148,9 @@ public class ProcessInstructionsActivity extends AppCompatActivity {
 
         title.setText(currentStep.getTitle());
         overlayTitle.setText(currentStep.getTitle());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            overlayTitle.setTooltipText(currentStep.getTitle());
+        }
         description.setText(currentStep.getDescription());
         overlayDescription.setText(currentStep.getDescription());
 

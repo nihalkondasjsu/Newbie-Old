@@ -22,15 +22,17 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.85"
-                android:autoSizeMaxTextSize="100sp"
-                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="16pt"
+                android:autoSizeMinTextSize="10pt"
                 android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
                 android:maxLines="1"
+                android:maxLength="30"
                 android:text="Step 2 : Zelle"
                 android:textColor="#fff"
                 android:textStyle="bold"
-                android:textSize="16pt" />
+                android:textSize="16pt"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/overlayClose"
@@ -52,15 +54,16 @@
                 android:id="@+id/overlayDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoSizeMaxTextSize="20sp"
-                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="10pt"
+                android:autoSizeMinTextSize="8pt"
                 android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
                 android:textColor="#000"
                 android:maxLines="3"
                 android:padding="5dp"
                 android:text='Click on "Transfer'
-                android:textSize="10pt" />
+                android:textSize="10pt"
+                android:ellipsize="end"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
